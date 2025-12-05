@@ -151,7 +151,7 @@ SECRET_KEY = 'django-insecure-p0lfg3qai@hznaclm-z3v=vkdks7f&pp#-d1t@4fk+hd-qd1qr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = ["mglrndm.online", "www.mglrndm.online", "107.20.37.59"]
+ALLOWED_HOSTS = ["mglrndm.online", "www.mglrndm.online", "107.20.37.59", "promo.buteekhui.com", "buteekhui.com", "promo.makhimpex.mn", "makhimpex.mn", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -308,7 +308,19 @@ CORS_ALLOW_CREDENTIALS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Domain configuration (from your code)
-Domain = 'http://112.72.2.117:81'
+Domain = 'https://promo.buteekhui.com'
+
+# CSRF Trusted Origins (for Django 4.0+)
+CSRF_TRUSTED_ORIGINS = [
+    'https://promo.buteekhui.com',
+    'http://promo.buteekhui.com',
+    'https://promo.makhimpex.mn',
+    'http://promo.makhimpex.mn',
+    'https://mglrndm.online',
+    'http://mglrndm.online',
+    'https://www.mglrndm.online',
+    'http://www.mglrndm.online',
+]
 
 # Froala Editor Configuration (if needed)
 FROALA_EDITOR_OPTIONS = {
