@@ -63,7 +63,17 @@ services:
       DB_PASSWORD: pass1234
       DB_PORT: 3306
       REDIS_HOST: redis
-@@ -77,4 +39,4 @@
+      REDIS_PORT: 6379
+      DEBUG: 1
+    networks:
+      - django-network
+    # 🎯 Using the correct project name: 'myproject'
+    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
+
+
+networks:
+  django-network:
+    driver: bridge
 
 volumes:
   mysql_data:
