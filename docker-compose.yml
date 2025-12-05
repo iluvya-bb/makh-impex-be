@@ -2,11 +2,11 @@ version: "3.9"
 
 services:
   db:
+    # ... (db service remains unchanged for this request) ...
     image: mysql:8
     container_name: mysql-django
     restart: always
     environment:
-      # Removed: MYSQL_DATABASE: mah_db 
       MYSQL_USER: django_user
       MYSQL_PASSWORD: pass1234
       MYSQL_ROOT_PASSWORD: rootpass
@@ -23,6 +23,7 @@ services:
       retries: 5
 
   redis:
+    # ... (redis service remains unchanged) ...
     image: redis:7-alpine
     container_name: redis-django
     restart: always
@@ -65,7 +66,9 @@ services:
       DEBUG: 1
     networks:
       - django-network
-    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
+    # 🎯 The NON-INVASIVE change: Use Django's dev server for auto-reloading
+    # Gunicorn is for production; runserver is for development.
+    command: python manage.py runserver 0.0.0.0:8000
 
 
 networks:
