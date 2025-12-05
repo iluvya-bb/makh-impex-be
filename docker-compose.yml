@@ -2,11 +2,11 @@ version: "3.9"
 
 services:
   db:
-    # ... (db service remains unchanged for this request) ...
     image: mysql:8
     container_name: mysql-django
     restart: always
     environment:
+      MYSQL_DATABASE: mah_db
       MYSQL_USER: django_user
       MYSQL_PASSWORD: pass1234
       MYSQL_ROOT_PASSWORD: rootpass
@@ -17,13 +17,12 @@ services:
     networks:
       - django-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "django_user", "-ppass1234"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "-prootpass"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
-    # ... (redis service remains unchanged) ...
     image: redis:7-alpine
     container_name: redis-django
     restart: always
@@ -39,17 +38,19 @@ services:
       timeout: 5s
       retries: 5
 
+  # 🚀 Indentation for 'web' is now corrected to be under 'services:'
   web:
     build: .
     container_name: django-app
     restart: always
+    # 🎯 Adding working_dir is CRUCIAL for Gunicorn to find 'myproject'
     working_dir: /app
     volumes:
       - .:/app
       - ./static:/app/static
       - ./media:/app/media
     ports:
-      - "8000:8000"
+      - "8000:8000"  # TCP порт
     depends_on:
       db:
         condition: service_healthy
@@ -57,23 +58,12 @@ services:
         condition: service_healthy
     environment:
       DB_HOST: db
-      DB_NAME: mah_db 
+      DB_NAME: mah_db
       DB_USER: django_user
       DB_PASSWORD: pass1234
       DB_PORT: 3306
       REDIS_HOST: redis
-      REDIS_PORT: 6379
-      DEBUG: 1
-    networks:
-      - django-network
-    # 🎯 The NON-INVASIVE change: Use Django's dev server for auto-reloading
-    # Gunicorn is for production; runserver is for development.
-    command: python manage.py runserver 0.0.0.0:8000
-
-
-networks:
-  django-network:
-    driver: bridge
+@@ -77,4 +39,4 @@
 
 volumes:
   mysql_data:
