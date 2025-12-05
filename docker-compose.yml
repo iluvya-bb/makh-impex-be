@@ -14,6 +14,11 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - django-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
@@ -25,27 +30,27 @@ services:
       - redis_data:/data
     networks:
       - django-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   web:
     build: .
     container_name: django-app
     restart: always
-
-    # ✅ Correct volume setup
     volumes:
       - .:/app
       - ./static:/app/static
       - ./media:/app/media
-
     ports:
       - "8000:8000"
-
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-
     environment:
       DB_HOST: db
       DB_NAME: mah_db
@@ -55,7 +60,6 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       DEBUG: 1
-
     networks:
       - django-network
 
