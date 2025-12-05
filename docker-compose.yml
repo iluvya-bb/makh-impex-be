@@ -1,0 +1,68 @@
+services:
+  db:
+    image: mysql:8
+    container_name: mysql-django
+    restart: always
+    environment:
+      MYSQL_DATABASE: mah_db
+      MYSQL_USER: django_user
+      MYSQL_PASSWORD: pass1234
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - django-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-django
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - django-network
+
+  web:
+    build: .
+    container_name: django-app
+    restart: always
+
+    # ✅ Correct volume setup
+    volumes:
+      - .:/app
+      - ./static:/app/static
+      - ./media:/app/media
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    environment:
+      DB_HOST: db
+      DB_NAME: mah_db
+      DB_USER: django_user
+      DB_PASSWORD: pass1234
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DEBUG: 1
+
+    networks:
+      - django-network
+
+networks:
+  django-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
