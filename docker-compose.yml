@@ -1,44 +1,6 @@
 version: "3.9"
 
 services:
-  db:
-    image: mysql:8
-    container_name: mysql-django
-    restart: always
-    environment:
-      MYSQL_DATABASE: mah_db
-      MYSQL_USER: django_user
-      MYSQL_PASSWORD: pass1234
-      MYSQL_ROOT_PASSWORD: rootpass
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - django-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "-prootpass"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  redis:
-    image: redis:7-alpine
-    container_name: redis-django
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - django-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # 🚀 Indentation for 'web' is now corrected to be under 'services:'
   web:
     build: .
     container_name: django-app
