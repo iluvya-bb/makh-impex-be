@@ -62,6 +62,9 @@ class Lottery(models.Model):
     sum = models.CharField(max_length=50)
     horoo = models.CharField(max_length=50)
     status = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
 
     def __str__(self):
         return f"{self.phone_number} - {self.lottery_number}"
