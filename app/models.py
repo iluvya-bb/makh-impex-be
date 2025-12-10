@@ -1,6 +1,8 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from django.utils import timezone
+
 
 
 class UserManager(BaseUserManager):
@@ -62,8 +64,8 @@ class Lottery(models.Model):
     sum = models.CharField(max_length=50)
     horoo = models.CharField(max_length=50)
     status = models.CharField(max_length=50)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+    updated_at = models.DateTimeField(auto_now=True, null=False, blank=False)
 
 
     def __str__(self):
